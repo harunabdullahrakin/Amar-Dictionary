@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest" href="/manifest.json">
+    <title>Amar Dictionary - Your Complete English to Bangla Dictionary</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous">
+    <style>
+
+        :root {
+
+            --light-bg: #111827;
+            --light-card-bg: #1f2937;
+            --light-text: #f9fafb;
+            --light-text-secondary: #9ca3af;
+            --light-border: #374151;
+            --light-primary: #3b82f6;
+            --light-primary-hover: #2563eb;
+            --light-sidebar-bg: #0f172a;
+
+            --dark-bg: #111827;
+            --dark-card-bg: #1f2937;
+            --dark-text: #f9fafb;
+            --dark-text-secondary: #9ca3af;
+            --dark-border: #374151;
+            --dark-primary: #3b82f6;
+            --dark-primary-hover: #2563eb;
+            --dark-sidebar-bg: #0f172a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            transition: background-color 0.3s ease;
+        }
+
+        body.light-mode {
+            background-color: var(--light-bg);
+            color: var(--light-text);
+        }
+
+        body.dark-mode {
+            background-color: var(--dark-bg);
+            color: var(--dark-text);
+        }
+
+        .card {
+            transition: all 0.3s ease;
+            border: 1px solid;
+        }
+
+        body.light-mode .card {
+            background-color: var(--light-card-bg);
+            border-color: var(--light-border);
+        }
+
+        body.dark-mode .card {
+            background-color: var(--dark-card-bg);
+            border-color: var(--dark-border);
+        }
+
+        .btn-primary {
+            transition: all 0.3s ease;
+        }
+
+        body.light-mode .btn-primary {
+            background-color: var(--light-primary);
+            color: white;
+        }
+
+        body.light-mode .btn-primary:hover {
+            background-color: var(--light-primary-hover);
+        }
+
+        body.dark-mode .btn-primary {
+            background-color: var(--dark-primary);
+            color: white;
+        }
+
+        body.dark-mode .btn-primary:hover {
+            background-color: var(--dark-primary-hover);
+        }
+
+        .sidebar {
+            transition: all 0.3s ease;
+        }
+
+        body.light-mode .sidebar {
+            background-color: var(--light-sidebar-bg);
+            border-color: var(--light-border);
+        }
+
+        body.dark-mode .sidebar {
+            background-color: var(--dark-sidebar-bg);
+            border-color: var(--dark-border);
+        }
+
+        body.light-mode input, body.light-mode select {
+            background-color: var(--light-bg);
+            color: var(--light-text);
+            border-color: var(--light-border);
+        }
+
+        body.dark-mode input, body.dark-mode select {
+            background-color: var(--dark-card-bg);
+            color: var(--dark-text);
+            border-color: var(--dark-border);
+        }
+
+        .autocomplete-dropdown {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        body.light-mode .autocomplete-item:hover {
+            background-color: #f3f4f6;
+        }
+
+        body.dark-mode .autocomplete-item:hover {
+            background-color: #374151;
+        }
+
+        .tab-button.active {
+            border-bottom: 2px solid var(--light-primary);
+        }
+
+        body.dark-mode .tab-button.active {
+            border-bottom: 2px solid var(--dark-primary);
+        }
+
+        .pronunciation-btn {
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .pronunciation-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .voice-recording {
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .image-gallery img {
+            transition: transform 0.3s ease;
+        }
+
+        .image-gallery img:hover {
+            transform: scale(1.05);
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                position: fixed;
+                z-index: 50;
+                height: 100vh;
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body class="light-mode">
+
+    <div id="sidebar" class="sidebar fixed left-0 top-0 h-screen w-64 border-r p-6 overflow-y-auto md:relative md:translate-x-0">
+        <div class="flex items-center justify-between mb-8">
+            <h2 class="text-2xl font-bold">Amar Dictionary</h2>
+            <button id="closeSidebar" class="md:hidden">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+        </div>
+
+        <nav class="space-y-4">
+            <a href="#" onclick="showHome()" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-opacity-10 hover:bg-gray-500">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </a>
+
+            <a href="#" onclick="showHistory()" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-opacity-10 hover:bg-gray-500">
+                <i class="fas fa-history"></i>
+                <span>Recent</span>
+            </a>
+
+        </nav>
+    </div>
+
+    <div class="md:ml-64 min-h-screen">
+
+        <div class="sticky top-0 z-40 card border-b p-4">
+            <div class="flex items-center justify-between max-w-6xl mx-auto">
+                <button id="menuToggle" class="md:hidden">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+
+                <div class="flex-1 max-w-2xl mx-4 relative">
+                    <div class="relative">
+                        <input 
+                            type="text" 
+                            id="searchInput"
+                            placeholder="Search for a word..." 
+                            class="w-full px-4 py-3 pr-24 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                        <div class="absolute right-2 top-1/2 -translate-y-1/2 flex items-center space-x-2">
+                            <button id="voiceBtn" class="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full">
+                                <i class="fas fa-microphone text-gray-600 dark:text-gray-300"></i>
+                            </button>
+                            <button id="searchBtn" class="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full">
+                                <i class="fas fa-search text-gray-600 dark:text-gray-300"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="autocompleteDropdown" class="hidden absolute w-full card mt-2 rounded-lg shadow-lg autocomplete-dropdown"></div>
+                </div>
+
+                <button id="themeToggle" class="p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700">
+                    <i class="fas fa-moon text-xl"></i>
+                </button>
+            </div>
+        </div>
+
+        <div id="contentArea" class="p-6 max-w-6xl mx-auto">
+
+            <div id="landingPage">
+                <div class="text-center mb-8">
+                    <h1 class="text-4xl font-bold mb-2">Amar Dictionary</h1>
+                    <p class="text-gray-600 dark:text-gray-400">Your comprehensive English to Bangla dictionary</p>
+                </div>
+
+<div class="card rounded-xl p-6 mb-8 bg-gradient-to-r from-purple-100 to-blue-100 dark:from-gray-800 dark:to-gray-900 shadow-lg">
+    <h2 class="text-3xl font-extrabold mb-6 flex items-center text-gray-800 dark:text-gray-200">
+        <i class="fas fa-trophy text-yellow-400 mr-3 animate-bounce"></i>
+        Weekly Words
+    </h2>
+    <div class="grid md:grid-cols-2 gap-6" id="wordContainer">
+
+    </div>
+</div>
+
+<script>
+const API_URL = 'https://random-word-api.herokuapp.com/word?number=10';
+const CACHE_KEY = 'weeklyWords';
+const CACHE_EXPIRY_KEY = 'weeklyWordsExpiry';
+const ONE_WEEK = 7 * 24 * 60 * 60 * 1000; 
+
+async function fetchWords() {
+    const cached = localStorage.getItem(CACHE_KEY);
+    const expiry = localStorage.getItem(CACHE_EXPIRY_KEY);
+
+    if (cached && expiry && new Date().getTime() < Number(expiry)) {
+        return JSON.parse(cached);
+    }
+
+    const response = await fetch(API_URL);
+    const words = await response.json();
+
+    localStorage.setItem(CACHE_KEY, JSON.stringify(words));
+    localStorage.setItem(CACHE_EXPIRY_KEY, new Date().getTime() + ONE_WEEK);
+
+    return words;
+}
+
+function renderWords(words) {
+    const container = document.getElementById('wordContainer');
+    container.innerHTML = '';
+    const mid = Math.ceil(words.length / 2);
+
+    const firstCol = words.slice(0, mid);
+    const secondCol = words.slice(mid);
+
+    function createWordCard(word, index) {
+        const div = document.createElement('div');
+        div.className = `
+            p-4 bg-white dark:bg-gray-700 rounded-xl shadow-md hover:shadow-xl
+            transition-shadow duration-300 cursor-pointer flex items-center justify-between
+            hover:scale-105 transform
+        `;
+        div.innerHTML = `<span class="font-semibold text-lg text-gray-800 dark:text-gray-200">${index}. ${capitalize(word)}</span>
+                         <i class="fas fa-search text-gray-400 hover:text-blue-500"></i>`;
+        div.onclick = () => searchWord(word);
+        return div;
+    }
+
+    const col1 = document.createElement('div');
+    col1.className = 'space-y-4';
+    firstCol.forEach((word, i) => col1.appendChild(createWordCard(word, i + 1)));
+
+    const col2 = document.createElement('div');
+    col2.className = 'space-y-4';
+    secondCol.forEach((word, i) => col2.appendChild(createWordCard(word, i + mid + 1)));
+
+    container.appendChild(col1);
+    container.appendChild(col2);
+}
+
+function capitalize(str) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+fetchWords().then(renderWords);
+</script>
+
+                <div class="card rounded-lg p-6">
+                    <h2 class="text-2xl font-bold mb-4 flex items-center">
+                        <i class="fas fa-star text-blue-500 mr-2"></i>
+                        Important Words
+                    </h2>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <div class="card p-4 rounded-lg text-center hover:shadow-lg cursor-pointer" onclick="searchWord('artificial')">
+                            <i class="fas fa-lightbulb text-3xl text-yellow-500 mb-2"></i>
+                            <p class="font-semibold">Artificial</p>
+                        </div>
+                        <div class="card p-4 rounded-lg text-center hover:shadow-lg cursor-pointer" onclick="searchWord('quantum')">
+                            <i class="fas fa-atom text-3xl text-purple-500 mb-2"></i>
+                            <p class="font-semibold">Quantum</p>
+                        </div>
+                        <div class="card p-4 rounded-lg text-center hover:shadow-lg cursor-pointer" onclick="searchWord('algorithm')">
+                            <i class="fas fa-code text-3xl text-green-500 mb-2"></i>
+                            <p class="font-semibold">Algorithm</p>
+                        </div>
+                        <div class="card p-4 rounded-lg text-center hover:shadow-lg cursor-pointer" onclick="searchWord('blockchain')">
+                            <i class="fas fa-link text-3xl text-blue-500 mb-2"></i>
+                            <p class="font-semibold">Blockchain</p>
+                        </div>
+                        <div class="card p-4 rounded-lg text-center hover:shadow-lg cursor-pointer" onclick="searchWord('ecosystem')">
+                            <i class="fas fa-leaf text-3xl text-green-600 mb-2"></i>
+                            <p class="font-semibold">Ecosystem</p>
+                        </div>
+                        <div class="card p-4 rounded-lg text-center hover:shadow-lg cursor-pointer" onclick="searchWord('sustainability')">
+                            <i class="fas fa-recycle text-3xl text-teal-500 mb-2"></i>
+                            <p class="font-semibold">Sustainability</p>
+                        </div>
+                        <div class="card p-4 rounded-lg text-center hover:shadow-lg cursor-pointer" onclick="searchWord('metadata')">
+                            <i class="fas fa-database text-3xl text-indigo-500 mb-2"></i>
+                            <p class="font-semibold">Metadata</p>
+                        </div>
+                        <div class="card p-4 rounded-lg text-center hover:shadow-lg cursor-pointer" onclick="searchWord('cybersecurity')">
+                            <i class="fas fa-shield-alt text-3xl text-red-500 mb-2"></i>
+                            <p class="font-semibold">Cybersecurity</p>
+                        </div>
+                        <div class="card p-4 rounded-lg text-center hover:shadow-lg cursor-pointer" onclick="searchWord('cryptocurrency')">
+                            <i class="fas fa-bitcoin text-3xl text-orange-500 mb-2"></i>
+                            <p class="font-semibold">Cryptocurrency</p>
+                        </div>
+                        <div class="card p-4 rounded-lg text-center hover:shadow-lg cursor-pointer" onclick="searchWord('metaverse')">
+                            <i class="fas fa-vr-cardboard text-3xl text-pink-500 mb-2"></i>
+                            <p class="font-semibold">Metaverse</p>
+                        </div>
+                        <div class="card p-4 rounded-lg text-center hover:shadow-lg cursor-pointer" onclick="searchWord('automation')">
+                            <i class="fas fa-robot text-3xl text-gray-600 mb-2"></i>
+                            <p class="font-semibold">Automation</p>
+                        </div>
+                        <div class="card p-4 rounded-lg text-center hover:shadow-lg cursor-pointer" onclick="searchWord('analytics')">
+                            <i class="fas fa-chart-line text-3xl text-blue-600 mb-2"></i>
+                            <p class="font-semibold">Analytics</p>
+                        </div>
+                    </div>
+                </div>
+
+<div class="flex justify-center my-8">
+    <button id="installBtn" class="px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white font-bold rounded-xl shadow-lg flex items-center space-x-2 transition-transform transform hover:scale-105">
+        <i class="fas fa-download"></i>
+        <span>Install App</span>
+    </button>
+</div><script>
+let deferredPrompt;
+
+window.addEventListener('beforeinstallprompt', (e) => {
+
+    e.preventDefault();
+    deferredPrompt = e;
+
+    const installBtn = document.getElementById('installBtn');
+    installBtn.style.display = 'flex';
+});
+
+const installBtn = document.getElementById('installBtn');
+installBtn.addEventListener('click', async () => {
+    if (!deferredPrompt) return;
+
+    deferredPrompt.prompt(); 
+
+    const choiceResult = await deferredPrompt.userChoice;
+    if (choiceResult.outcome === 'accepted') {
+        console.log('User accepted the install prompt');
+    } else {
+        console.log('User dismissed the install prompt');
+    }
+    deferredPrompt = null; 
+
+});
+</script>
+            </div>
+
+            <div id="wordDetailPage" class="hidden">
+                <button onclick="showHome()" class="mb-4 text-blue-500 hover:text-blue-600 flex items-center">
+                    <i class="fas fa-arrow-left mr-2"></i> Back to Home
+                </button>
+
+                <div class="card rounded-lg p-6 mb-6">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="flex-1">
+                            <h1 id="wordTitle" class="text-4xl font-bold mb-2">Word</h1>
+                            <div class="flex items-center space-x-4 text-sm">
+                                <button class="pronunciation-btn flex items-center space-x-1 text-blue-500 hover:text-blue-600">
+                                    <span>UK</span>
+                                    <i class="fas fa-volume-up"></i>
+                                </button>
+                                <button class="pronunciation-btn flex items-center space-x-1 text-blue-500 hover:text-blue-600">
+                                    <span>US</span>
+                                    <i class="fas fa-volume-up"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <script>
+
+const pronunButtons = document.querySelectorAll('.pronunciation-btn');
+
+pronunButtons.forEach(button => {
+    button.addEventListener('click', () => {
+        const accent = button.querySelector('span').textContent.toLowerCase(); 
+
+        const audioUrl = wordData.bangla_translation.pron_audio[accent]; 
+
+        if (audioUrl) {
+            const audio = new Audio(audioUrl);
+            audio.play();
+        } else {
+            alert("Pronunciation audio not found!");
+        }
+    });
+});
+                </script>
+
+<div class="card rounded-lg p-6 mb-6">
+
+    <div class="mb-6">
+        <h2 class="text-2xl font-bold mb-3">Meaning</h2>
+        <p id="banglaMeaning1" class="text-xl text-blue-800 dark:text-blue-200">শব্দ</p>
+    </div>
+
+    <div id="groupedMeanings">
+
+    </div>
+</div>
+
+<script>
+function updateWordData(data, word) {
+
+    document.getElementById('wordTitle').textContent = data.word || word;
+    document.getElementById('banglaMeaning1').textContent = data.bangla_translation?.translated || '';
+
+    const groupedContainer = document.getElementById('groupedMeanings');
+    groupedContainer.innerHTML = ''; 
+
+    if (!data.bangla_translation2) return;
+
+    const meaningsArray = data.bangla_translation2.split(',').map(item => item.trim());
+
+    const hasPosCode = meaningsArray.some(m => /\(\w+\)$/.test(m));
+
+    if (hasPosCode) {
+
+        const posGroups = {};
+        meaningsArray.forEach(meaning => {
+            const match = meaning.match(/\((\w+)\)$/); 
+
+            const posCode = match ? match[1] : 'Other';
+            if (!posGroups[posCode]) posGroups[posCode] = [];
+            posGroups[posCode].push(match ? meaning.replace(/\(\w+\)$/, '').trim() : meaning);
+        });
+
+        const posNames = {
+            N: 'Noun',
+            V: 'Verb',
+            P: 'Pronoun',
+            ADJ: 'Adjective',
+            ADV: 'Adverb',
+            CONJ: 'Conjunction',
+            PREP: 'Preposition',
+            Other: ''
+        };
+
+        Object.keys(posGroups).forEach(pos => {
+            const div = document.createElement('div');
+            div.className = 'mb-4';
+
+            if (posNames[pos]) {
+                const span = document.createElement('span');
+                span.className = 'inline-block px-3 py-1 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 rounded-full text-sm mb-2';
+                span.textContent = posNames[pos];
+                div.appendChild(span);
+            }
+
+            const p = document.createElement('p');
+            p.textContent = posGroups[pos].join(', '); 
+
+            p.className = 'text-lg';
+            div.appendChild(p);
+
+            groupedContainer.appendChild(div);
+        });
+
+    } else {
+
+        groupedContainer.textContent = meaningsArray.join(', ');
+    }
+}
+</script>
+
+                <div class="card rounded-lg p-6 mb-6">
+                    <h2 class="text-2xl font-bold mb-4">Definition</h2>
+                    <div class="space-y-4">
+                        <div>
+                            <span class="font-semibold text-blue-500">verb:</span>
+                            <p id="definition1" class="ml-6 mt-1">Look at a word</p>
+                        </div>
+                        <div>
+                            <span class="font-semibold text-blue-500">noun:</span>
+                            <p id="definition2" class="ml-6 mt-1">A single distinct meaningful element of speech or writing</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card rounded-lg p-6 mb-6">
+                    <h2 class="text-2xl font-bold mb-4">Synonyms</h2>
+                    <div id="synonymsList" class="flex flex-wrap gap-2">
+                        <span class="px-4 py-2 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full">term</span>
+                        <span class="px-4 py-2 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full">expression</span>
+                        <span class="px-4 py-2 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full">phrase</span>
+                    </div>
+                </div>
+
+                <div class="card rounded-lg p-6 mb-6">
+                    <h2 class="text-2xl font-bold mb-4">Antonyms</h2>
+                    <div id="antonymsList" class="flex flex-wrap gap-2">
+                        <span class="px-4 py-2 bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200 rounded-full">silence</span>
+                        <span class="px-4 py-2 bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200 rounded-full">quiet</span>
+                    </div>
+                </div>
+
+                <div class="card rounded-lg p-6 mb-6">
+                    <h2 class="text-2xl font-bold mb-4 flex items-center">
+                        <i class="fas fa-city mr-2"></i>
+                        Urban Meaning
+                    </h2>
+                    <div id="urbanMeaning" class="space-y-2">
+                        <p>Informal or slang definition of the word from popular culture.</p>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">Example context or usage in modern language.</p>
+                    </div>
+                </div>
+
+                <div class="card rounded-lg p-6 mb-6">
+                    <h2 class="text-2xl font-bold mb-4">Examples</h2>
+                    <div id="examplesList" class="space-y-3">
+                        <div class="p-3 border-l-4 border-blue-500 bg-blue-50 dark:bg-blue-900 dark:bg-opacity-20">
+                            <p>1. This is the first example sentence.</p>
+                        </div>
+                        <div class="p-3 border-l-4 border-blue-500 bg-blue-50 dark:bg-blue-900 dark:bg-opacity-20">
+                            <p>2. Here is another example of how to use this word.</p>
+                        </div>
+                        <div class="hidden example-hidden p-3 border-l-4 border-blue-500 bg-blue-50 dark:bg-blue-900 dark:bg-opacity-20">
+                            <p>3. Third example showing different context.</p>
+                        </div>
+                        <div class="hidden example-hidden p-3 border-l-4 border-blue-500 bg-blue-50 dark:bg-blue-900 dark:bg-opacity-20">
+                            <p>4. Fourth example with more detail.</p>
+                        </div>
+                    </div>
+                    <button id="showMoreExamples" onclick="toggleExamples()" class="mt-4 btn-primary px-4 py-2 rounded-lg">
+                        Show More
+                    </button>
+                </div>
+
+                <div class="card rounded-lg p-6">
+                    <h2 class="text-2xl font-bold mb-4">Images</h2>
+                    <div id="imageGallery" class="image-gallery grid grid-cols-2 md:grid-cols-3 gap-4">
+                        <div class="aspect-square bg-gray-200 dark:bg-gray-700 rounded-lg overflow-hidden">
+                            <img src="https://via.placeholder.com/300x300?text=Image+1" alt="Word image 1" class="w-full h-full object-cover">
+                        </div>
+                        <div class="aspect-square bg-gray-200 dark:bg-gray-700 rounded-lg overflow-hidden">
+                            <img src="https://via.placeholder.com/300x300?text=Image+2" alt="Word image 2" class="w-full h-full object-cover">
+                        </div>
+                        <div class="aspect-square bg-gray-200 dark:bg-gray-700 rounded-lg overflow-hidden">
+                            <img src="https://via.placeholder.com/300x300?text=Image+3" alt="Word image 3" class="w-full h-full object-cover">
+                        </div>
+                        <div class="hidden image-hidden aspect-square bg-gray-200 dark:bg-gray-700 rounded-lg overflow-hidden">
+                            <img src="https://via.placeholder.com/300x300?text=Image+4" alt="Word image 4" class="w-full h-full object-cover">
+                        </div>
+                        <div class="hidden image-hidden aspect-square bg-gray-200 dark:bg-gray-700 rounded-lg overflow-hidden">
+                            <img src="https://via.placeholder.com/300x300?text=Image+5" alt="Word image 5" class="w-full h-full object-cover">
+                        </div>
+                    </div>
+                    <button id="showMoreImages" onclick="toggleImages()" class="mt-4 btn-primary px-4 py-2 rounded-lg">
+                        Show More
+                    </button>
+                </div>
+            </div>
+
+            <div id="historyPage" class="hidden">
+                <div class="flex items-center justify-between mb-6">
+                    <h1 class="text-4xl font-bold">Recent Searches</h1>
+                    <button onclick="clearHistory()" class="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg">
+                        <i class="fas fa-trash mr-2"></i>Clear History
+                    </button>
+                </div>
+
+                <div class="card rounded-lg p-6">
+                    <h2 class="text-2xl font-bold mb-4 flex items-center">
+                        <i class="fas fa-history text-blue-500 mr-2"></i>
+                        Your Search History
+                    </h2>
+                    <div id="historyList" class="grid md:grid-cols-2 gap-4">
+
+                    </div>
+                    <div id="emptyHistory" class="hidden text-center py-12 text-gray-500 dark:text-gray-400">
+                        <i class="fas fa-inbox text-6xl mb-4 opacity-50"></i>
+                        <p class="text-xl">No search history yet</p>
+                        <p class="mt-2">Start searching for words to build your history</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+
+    const themeToggle = document.getElementById('themeToggle');
+    const body = document.body;
+
+    themeToggle.addEventListener('click', () => {
+        if (body.classList.contains('light-mode')) {
+            body.classList.remove('light-mode');
+            body.classList.add('dark-mode');
+            themeToggle.innerHTML = '<i class="fas fa-sun text-xl"></i>';
+            localStorage.setItem('theme', 'dark');
+        } else {
+            body.classList.remove('dark-mode');
+            body.classList.add('light-mode');
+            themeToggle.innerHTML = '<i class="fas fa-moon text-xl"></i>';
+            localStorage.setItem('theme', 'light');
+        }
+    });
+
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    if (savedTheme === 'dark') {
+        body.classList.remove('light-mode');
+        body.classList.add('dark-mode');
+        themeToggle.innerHTML = '<i class="fas fa-sun text-xl"></i>';
+    }
+
+    const menuToggle = document.getElementById('menuToggle');
+    const sidebar = document.getElementById('sidebar');
+    const closeSidebar = document.getElementById('closeSidebar');
+
+    menuToggle.addEventListener('click', () => sidebar.classList.add('active'));
+    closeSidebar.addEventListener('click', () => sidebar.classList.remove('active'));
+
+    const searchInput = document.getElementById('searchInput');
+    const autocompleteDropdown = document.getElementById('autocompleteDropdown');
+    let debounceTimer;
+
+    searchInput.addEventListener('input', (e) => {
+        clearTimeout(debounceTimer);
+        const value = e.target.value.toLowerCase().trim();
+
+        if (!value) {
+            autocompleteDropdown.classList.add('hidden');
+            return;
+        }
+
+        debounceTimer = setTimeout(() => {
+            fetch(`https://api.datamuse.com/sug?s=${value}`)
+                .then(res => res.json())
+                .then(data => {
+                    const matches = data.map(item => item.word);
+
+                    if (matches.length === 0) {
+                        autocompleteDropdown.classList.add('hidden');
+                        return;
+                    }
+
+                    autocompleteDropdown.innerHTML = matches.slice(0, 8).map(word =>
+                        `<div class="autocomplete-item p-3 cursor-pointer border-b last:border-b-0" onclick="searchWord('${word}')">
+                            ${word}
+                        </div>`
+                    ).join('');
+
+                    autocompleteDropdown.classList.remove('hidden');
+                })
+                .catch(() => autocompleteDropdown.classList.add('hidden'));
+        }, 250); 
+
+    });
+
+    document.addEventListener('click', (e) => {
+        if (!searchInput.contains(e.target) && !autocompleteDropdown.contains(e.target)) {
+            autocompleteDropdown.classList.add('hidden');
+        }
+    });
+
+    document.getElementById('searchBtn').addEventListener('click', () => {
+        const word = searchInput.value.trim();
+        if (word) searchWord(word.toLowerCase());
+    });
+
+    searchInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            const word = searchInput.value.trim();
+            if (word) searchWord(word.toLowerCase());
+        }
+    });
+
+    const voiceBtn = document.getElementById('voiceBtn');
+    let recognition = null;
+    let isRecording = false;
+
+    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        recognition = new SpeechRecognition();
+        recognition.lang = 'en-US';
+        recognition.continuous = false;
+
+        recognition.onstart = () => {
+            isRecording = true;
+            voiceBtn.innerHTML = '<i class="fas fa-microphone voice-recording text-red-500"></i>';
+        };
+
+        recognition.onresult = (event) => {
+            const transcript = event.results[0][0].transcript.toLowerCase();
+            searchInput.value = transcript;
+            searchWord(transcript);
+        };
+
+        recognition.onend = () => {
+            isRecording = false;
+            voiceBtn.innerHTML = '<i class="fas fa-microphone text-gray-600 dark:text-gray-300"></i>';
+        };
+
+        recognition.onerror = () => {
+            isRecording = false;
+            voiceBtn.innerHTML = '<i class="fas fa-microphone text-gray-600 dark:text-gray-300"></i>';
+        };
+
+        voiceBtn.addEventListener('click', () => {
+            if (!isRecording) recognition.start();
+        });
+    } else {
+        voiceBtn.addEventListener('click', () => {
+            alert('Speech recognition is not supported in your browser. Please try Chrome or Edge.');
+        });
+    }
+
+async function searchWord(word) {
+    word = word.toLowerCase();
+    const autocompleteDropdown = document.getElementById('autocompleteDropdown');
+    autocompleteDropdown.classList.add('hidden');
+
+    try {
+        const res = await fetch(`/api.php?word=${encodeURIComponent(word)}`);
+        if (!res.ok) throw new Error('Word not found');
+        const data = await res.json();
+
+document.getElementById('wordTitle').textContent = data.word || word;
+document.getElementById('banglaMeaning1').textContent = data.bangla_translation?.translated || '';
+
+const groupedContainer = document.getElementById('groupedMeanings');
+groupedContainer.innerHTML = ''; 
+
+if (data.bangla_translation2) {
+    const meaningsArray = data.bangla_translation2.split(',').map(item => item.trim());
+
+    const hasPosCode = meaningsArray.some(m => /\(\w+\)$/.test(m));
+
+    if (hasPosCode) {
+
+        const posGroups = {};
+        meaningsArray.forEach(meaning => {
+            const match = meaning.match(/\((\w+)\)$/); 
+
+            const posCode = match ? match[1] : 'Other';
+            if (!posGroups[posCode]) posGroups[posCode] = [];
+            posGroups[posCode].push(match ? meaning.replace(/\(\w+\)$/, '').trim() : meaning);
+        });
+
+        const posNames = { N: 'Noun', V: 'Verb', P: 'Pronoun', ADJ: 'Adjective', ADV: 'Adverb', CONJ: 'Conjunction', PREP: 'Preposition', Other: '' };
+
+        Object.keys(posGroups).forEach(pos => {
+            const div = document.createElement('div');
+            div.className = 'mb-4';
+
+            if (posNames[pos]) {
+                const span = document.createElement('span');
+                span.className = 'inline-block px-3 py-1 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 rounded-full text-sm mb-2';
+                span.textContent = posNames[pos];
+                div.appendChild(span);
+            }
+
+            const p = document.createElement('p');
+            p.textContent = posGroups[pos].join(', '); 
+
+            div.appendChild(p);
+
+            groupedContainer.appendChild(div);
+        });
+    } else {
+
+        groupedContainer.textContent = meaningsArray.join(', ');
+    }
+} else {
+    groupedContainer.textContent = '';
+}
+
+if (data.bangla_translation?.pron_audio) {
+    const pronAudio = data.bangla_translation.pron_audio;
+    const buttons = document.querySelectorAll('.pronunciation-btn');
+
+    buttons.forEach(button => {
+
+        button.replaceWith(button.cloneNode(true));
+    });
+
+    const freshButtons = document.querySelectorAll('.pronunciation-btn');
+
+    freshButtons.forEach(button => {
+        const accent = button.querySelector('span')?.textContent.toLowerCase(); 
+
+        if (accent && pronAudio[accent]) {
+            button.addEventListener('click', () => {
+                const audio = new Audio(pronAudio[accent]);
+                audio.play();
+            });
+        }
+    });
+}
+
+        const parts = data.parts_of_speech || [];
+        document.getElementById('definition1').textContent = parts[0]?.definitions[0] || '';
+        document.getElementById('definition2').textContent = parts[1]?.definitions[0] || '';
+
+        document.getElementById('synonymsList').innerHTML = (data.synonyms || []).map(s => 
+            `<span class="px-4 py-2 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full">${s}</span>`
+        ).join('');
+
+        document.getElementById('antonymsList').innerHTML = (data.antonyms || []).map(a => 
+            `<span class="px-4 py-2 bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200 rounded-full">${a}</span>`
+        ).join('');
+
+        document.getElementById('urbanMeaning').innerHTML = `<p>${data.urban_meaning || ''}</p>`;
+
+        const examplesList = document.getElementById('examplesList');
+        examplesList.innerHTML = (data.examples || []).map((ex, i) => 
+            `<div class="${i >= 2 ? 'hidden example-hidden' : ''} p-3 border-l-4 border-blue-500 bg-blue-50 dark:bg-blue-900 dark:bg-opacity-20">
+                <p>${i + 1}. ${ex}</p>
+            </div>`
+        ).join('');
+
+        const imageGallery = document.getElementById('imageGallery');
+        if (imageGallery) {
+            imageGallery.innerHTML = (data.images || []).map((img, i) => 
+                `<div class="${i >= 5 ? 'hidden image-hidden' : ''} aspect-square bg-gray-200 dark:bg-gray-700 rounded-lg overflow-hidden">
+                    <img src="${img}" class="w-full h-full object-cover" alt="Word image ${i+1}">
+                </div>`
+            ).join('');
+        }
+
+        document.getElementById('landingPage').classList.add('hidden');
+        document.getElementById('wordDetailPage').classList.remove('hidden');
+        document.getElementById('historyPage').classList.add('hidden');
+
+        saveToHistory(word);
+
+        resetShowMoreButtons();
+        window.scrollTo(0, 0);
+
+    } catch (err) {
+        console.error(err);
+        alert('Word not found!');
+    }
+}
+
+    function showHome() {
+        document.getElementById('landingPage').classList.remove('hidden');
+        document.getElementById('wordDetailPage').classList.add('hidden');
+        document.getElementById('historyPage').classList.add('hidden');
+        searchInput.value = '';
+        window.scrollTo(0, 0);
+    }
+
+    function showHistory() {
+        document.getElementById('landingPage').classList.add('hidden');
+        document.getElementById('wordDetailPage').classList.add('hidden');
+        document.getElementById('historyPage').classList.remove('hidden');
+        loadHistory();
+        window.scrollTo(0, 0);
+    }
+
+    function saveToHistory(word) {
+        let history = JSON.parse(localStorage.getItem('searchHistory') || '[]');
+        history = history.filter(item => item.word !== word);
+        history.unshift({ word, timestamp: new Date().toISOString(), date: new Date().toLocaleDateString(), time: new Date().toLocaleTimeString() });
+        if (history.length > 50) history = history.slice(0, 50);
+        localStorage.setItem('searchHistory', JSON.stringify(history));
+    }
+
+    function loadHistory() {
+        const history = JSON.parse(localStorage.getItem('searchHistory') || '[]');
+        const historyList = document.getElementById('historyList');
+        const emptyHistory = document.getElementById('emptyHistory');
+
+        if (!history.length) {
+            historyList.innerHTML = '';
+            emptyHistory.classList.remove('hidden');
+        } else {
+            emptyHistory.classList.add('hidden');
+            historyList.innerHTML = history.map((item, index) => `
+                <div class="p-4 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer flex items-center justify-between" onclick="searchWord('${item.word}')">
+                    <div class="flex items-center space-x-3">
+                        <span class="text-2xl font-bold text-blue-500">${index + 1}.</span>
+                        <div>
+                            <p class="font-semibold text-lg capitalize">${item.word}</p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">
+                                <i class="fas fa-clock mr-1"></i>${item.date} at ${item.time}
+                            </p>
+                        </div>
+                    </div>
+                    <i class="fas fa-chevron-right text-gray-400"></i>
+                </div>
+            `).join('');
+        }
+    }
+
+    function clearHistory() {
+        if (confirm('Are you sure you want to clear all your search history?')) {
+            localStorage.removeItem('searchHistory');
+            loadHistory();
+        }
+    }
+
+    function toggleExamples() {
+        const hiddenExamples = document.querySelectorAll('.example-hidden');
+        const btn = document.getElementById('showMoreExamples');
+        if (btn.textContent === 'Show More') {
+            hiddenExamples.forEach(ex => ex.classList.remove('hidden'));
+            btn.textContent = 'Show Less';
+        } else {
+            hiddenExamples.forEach(ex => ex.classList.add('hidden'));
+            btn.textContent = 'Show More';
+        }
+    }
+
+    function toggleImages() {
+        const hiddenImages = document.querySelectorAll('.image-hidden');
+        const btn = document.getElementById('showMoreImages');
+        if (btn.textContent === 'Show More') {
+            hiddenImages.forEach(img => img.classList.remove('hidden'));
+            btn.textContent = 'Show Less';
+        } else {
+            hiddenImages.forEach(img => img.classList.add('hidden'));
+            btn.textContent = 'Show More';
+        }
+    }
+
+    function resetShowMoreButtons() {
+        document.querySelectorAll('.example-hidden').forEach(el => el.classList.add('hidden'));
+        document.querySelectorAll('.image-hidden').forEach(el => el.classList.add('hidden'));
+        document.getElementById('showMoreExamples').textContent = 'Show More';
+        document.getElementById('showMoreImages').textContent = 'Show More';
+    }
+
+    if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+        .then(reg => console.log('Service worker registered', reg))
+        .catch(err => console.log('Service worker registration failed', err));
+    });
+}
+</script>
+
+</body>
+</html>
+

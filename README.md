@@ -6,8 +6,8 @@
 
 **Amar Dictionary** is a modern bilingual dictionary web app designed for quick English–Bangla word lookup with detailed meanings, pronunciation, examples, synonyms, antonyms, images, and more — all powered by a custom API built by [@harunabdullahrakin](https://github.com/harunabdullahrakin).
 
-🔗 **Live App:** [https://app.amarworld.me](https://app.amarworld.me)
-🧠 **API Endpoint:** [https://app.amarworld.me/api.php?word=love](https://app.amarworld.me/api.php?word=love)
+🔗 **Live App:** [https://dictionary.zone.id](https://dictionary.zone.id)
+🧠 **API Endpoint:** [https://dictionary.zone.id/api.php?word=love](https://dictionary.zone.id/api.php?word=love)
 
 ---
 

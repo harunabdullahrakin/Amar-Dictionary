@@ -1,6 +1,6 @@
 # 📘 Amar Dictionary
 
-[![Live Demo](https://img.shields.io/badge/Live-Demo-blue?style=for-the-badge)](https://app.amarworld.me)
+[![Live Demo](https://img.shields.io/badge/Live-Demo-blue?style=for-the-badge)](https://dictionary.zone.id)
 [![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
 [![Version](https://img.shields.io/badge/Version-1.0.0-orange?style=for-the-badge)]()
 
@@ -31,13 +31,21 @@ The result is a **powerful dictionary API** that can be used directly by develop
 ## ✨ Features
 
 ✅ **Modern UI** — built with responsive HTML, CSS (Tailwind + FontAwesome), and JavaScript.
+
 ✅ **Fast API** — single endpoint returning structured JSON with everything you need.
+
 ✅ **Bangla + English support** — translations, phonetics, and definitions in both languages.
+
 ✅ **Pronunciation audio** — UK and US voice files from verified sources.
+
 ✅ **Images** — dynamically fetched from public image APIs (Pinterest/CDN).
+
 ✅ **PWA Ready** — installable on devices (`manifest.json`, `sw.js`).
+
 ✅ **Offline-friendly** — cached with service worker support.
+
 ✅ **Custom-built backend** — fully written in PHP by the project author.
+
 ✅ **Lightweight** — no database server required; external APIs + JSON data handle it all.
 
 ---

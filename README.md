@@ -1,4 +1,4 @@
-# 📘 Amar Dictionary
+# 📘 Amar Dictionary - English To Bangla Dictionary
 
 [![Live Demo](https://img.shields.io/badge/Live-Demo-blue?style=for-the-badge)](https://dictionary.zone.id)
 [![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
@@ -55,7 +55,7 @@ The result is a **powerful dictionary API** that can be used directly by develop
 **Request:**
 
 ```
-https://app.amarworld.me/api.php?word=love
+https://dictionary.zone.id/api.php?word=love
 ```
 
 **Response (truncated for readability):**
@@ -141,7 +141,7 @@ Amar Dictionary aggregates data from multiple open and self-built APIs:
 **Hosting:**
 
 * Hosted on [AlwaysData](https://www.alwaysdata.com)
-* Live at [app.amarworld.me](https://app.amarworld.me)
+* Live at [dictionary.zone.id](https://dictionary.zone.id)
 
 ---
 
@@ -168,7 +168,7 @@ Amar-Dictionary/
 
 1. The user searches a word in the web interface.
 2. The frontend calls the main API:
-   `https://app.amarworld.me/api.php?word=WORD`
+   `https://dictionary.zone.id/api.php?word=love`
 3. The backend merges results from various sources (Bangla, English, Urban, Images).
 4. The response is returned as JSON.
 5. The frontend dynamically displays sections like **Bangla Meaning**, **Parts of Speech**, **Examples**, **Synonyms**, **Images**, etc.
@@ -180,7 +180,7 @@ Amar-Dictionary/
 **JavaScript Example:**
 
 ```js
-fetch("https://app.amarworld.me/api.php?word=peace")
+fetch("https://dictionary.zone.id/api.php?word=love")
   .then(res => res.json())
   .then(data => console.log(data));
 ```
@@ -218,9 +218,9 @@ Example for AlwaysData:
 
 ## 🧑‍💻 Author
 
-**Developed & maintained by:**
+**Developed by:**
 👤 [Harun Abdullah Rakin](https://github.com/harunabdullahrakin)
-🌐 [https://amarworld.me](https://amarworld.me)
+
 
 ---
 

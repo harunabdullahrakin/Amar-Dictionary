@@ -1,4 +1,4 @@
-# 📘 Amar Dictionary - En to Bn
+# 📘 Amar Dictionary - English to Bangla
 
 
 [![Live Demo](https://img.shields.io/badge/Live-Demo-blue?style=for-the-badge)](https://dictionary.zone.id)
